@@ -34,7 +34,8 @@ def post_new(request):
             return redirect('post_detail', pk=post.pk)
     else:
         form = PostForm()
-    return render(request, 'blog/post_edit.html', {'form': form})
+    return render(request, 'blog/post_edit.html', {'form': form, 
+                                                   "header_title": "New Blog"})
 
 
 def post_edit(request, pk: int):
@@ -54,7 +55,8 @@ def post_edit(request, pk: int):
             return redirect('post_detail', pk=post.pk)
     else:
         form = PostForm(instance=post)
-    return render(request, 'blog/post_edit.html', {'form': form})
+    return render(request, 'blog/post_edit.html', {'form': form, 
+                                                   "header_title": f"Edit post {post.title}"})
 
 
 def author_posts(request, author: str):
@@ -68,4 +70,5 @@ def author_posts(request, author: str):
     # filter user posts
     posts = Post.objects.filter(author=author).filter(
         published_date__lte=timezone.now()).order_by('-published_date')
-    return render(request, 'blog/post_list.html', {'posts': posts})
+    return render(request, 'blog/post_list.html', {'posts': posts, 
+                                                   "header_title": f"{str(author).capitalize()}'s posts"})
