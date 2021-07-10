@@ -6,17 +6,24 @@ from django.shortcuts import render, get_object_or_404, get_list_or_404, redirec
 
 
 def post_list(request):
+    """View to show all posts on the home page"""
     posts = Post.objects.filter(
         published_date__lte=timezone.now()).order_by('-published_date')
     return render(request, 'blog/post_list.html', {"posts": posts})
 
 
-def post_detail(request, pk):
+def post_detail(request, pk: int):
+    """View to display the entire post on a separate page
+
+    Args:
+        pk (int): the primary key of the post
+    """
     post = get_object_or_404(Post, pk=pk)
     return render(request, 'blog/post_detail.html', {'post': post})
 
 
 def post_new(request):
+    """View to publish a new post"""
     if request.method == "POST":
         form = PostForm(request.POST)
         if form.is_valid():
@@ -30,7 +37,12 @@ def post_new(request):
     return render(request, 'blog/post_edit.html', {'form': form})
 
 
-def post_edit(request, pk):
+def post_edit(request, pk: int):
+    """View to edit an old post
+
+    Args:
+        pk (int): Primary key of the post to edit
+    """
     post = get_object_or_404(Post, pk=pk)
     if request.method == "POST":
         form = PostForm(request.POST, instance=post)
@@ -46,7 +58,14 @@ def post_edit(request, pk):
 
 
 def author_posts(request, author: str):
+    """View to show all posts by a single author
+
+    Args:
+        author (str): The author's username
+    """
+    # Get user
     author = User.objects.get(username=author)
+    # filter user posts
     posts = Post.objects.filter(author=author).filter(
         published_date__lte=timezone.now()).order_by('-published_date')
     return render(request, 'blog/post_list.html', {'posts': posts})
