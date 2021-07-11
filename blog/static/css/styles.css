@@ -207,6 +207,10 @@ sup {
   top: -0.5em;
 }
 
+a, h4 {
+  color: #fff;
+}
+
 a {
   color: #212529;
   text-decoration: none;

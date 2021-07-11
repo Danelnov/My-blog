@@ -2,7 +2,7 @@ from .models import Post
 from .forms import PostForm
 from django.utils import timezone
 from django.contrib.auth.models import User
-from django.shortcuts import render, get_object_or_404, get_list_or_404, redirect
+from django.shortcuts import render, get_object_or_404, redirect
 
 
 def post_list(request):
@@ -34,8 +34,10 @@ def post_new(request):
             return redirect('post_detail', pk=post.pk)
     else:
         form = PostForm()
-    return render(request, 'blog/post_edit.html', {'form': form, 
-                                                   "header_title": "New Blog"})
+    return render(request, 'blog/post_edit.html', {
+        'form': form, 
+        "header_title": "New Blog"
+        })
 
 
 def post_edit(request, pk: int):
@@ -55,8 +57,10 @@ def post_edit(request, pk: int):
             return redirect('post_detail', pk=post.pk)
     else:
         form = PostForm(instance=post)
-    return render(request, 'blog/post_edit.html', {'form': form, 
-                                                   "header_title": f"Edit post {post.title}"})
+    return render(request, 'blog/post_edit.html', {
+        'form': form, 
+        "header_title": f"Edit post: {post.title}"
+        })
 
 
 def author_posts(request, author: str):
@@ -65,10 +69,26 @@ def author_posts(request, author: str):
     Args:
         author (str): The author's username
     """
-    # Get user
-    author = User.objects.get(username=author)
+    # Get user, if it does not exist show 404
+    author = get_object_or_404(User, username=author)
     # filter user posts
     posts = Post.objects.filter(author=author).filter(
         published_date__lte=timezone.now()).order_by('-published_date')
-    return render(request, 'blog/post_list.html', {'posts': posts, 
-                                                   "header_title": f"{str(author).capitalize()}'s posts"})
+    return render(request, 'blog/post_list.html', {
+        'posts': posts, 
+        "header_title": f"{str(author).capitalize()}'s posts"
+        })
+
+
+def posts_by_category(request, category: str):
+    """View to show all posts that share a category
+
+    Args:
+        category (str): The category name
+    """
+    # Filter posts by category
+    posts = Post.objects.filter(category=category).order_by('-published_date')
+    return render(request, 'blog/post_list.html', {
+        "posts":posts,
+        "header_title": f"Category: {category}",
+    })
