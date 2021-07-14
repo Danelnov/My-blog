@@ -31,7 +31,7 @@
                         {% if user.is_authenticated %}
                             <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="{% url 'post_new' %}">ADD BLOG</a></li>
                             {% if post %}
-                                <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="{% url 'post_edit' pk=post.pk %}">EDITAR</a></li> 
+                                <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="{% url 'post_edit' pk=post.pk %}">EDIT</a></li> 
                             {% endif %}
                         {% endif %}
                     </ul>
@@ -39,7 +39,13 @@
             </div>
         </nav>
         <!-- Page Header-->
-        <header class="masthead" style="background-image: url('assets/img/post-bg.jpg')">
+        {% if post %}
+            <header class="masthead" style="background-image: url('{{ post.image.url }}')">
+        {% elif header_image %}
+            <header class="masthead" style="background-image: url('{{ header_image }}')">
+        {% else %}
+            <header class="masthead" style="background-image: url('../../static/assets/img/home-bg.jpg')">
+        {% endif %}
             <div class="container position-relative px-4 px-lg-5">
                 <div class="row gx-4 gx-lg-5 justify-content-center">
                     <div class="col-md-10 col-lg-8 col-xl-7">
@@ -51,7 +57,7 @@
                             <div class="post-heading">
                                 <h1>{{ post.title }}</h1>
                                 <a href="{% url 'posts_by_category' category=post.category %}">
-                                    <h4>{{ post.category }}</h4>
+                                    <h4>#{{ post.category }}</h4>
                                 </a>
                                 <span class="meta">
                                     Publicado por 

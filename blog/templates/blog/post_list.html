@@ -16,7 +16,7 @@
                             <a href="{% url 'author_posts' author=post.author %}">{{ post.author }}</a>
                             en el {{ post.published_date }}
                         </p>
-                        <a href="{% url 'posts_by_category' category=post.category %}">{{ post.category }}</a>
+                        <a href="{% url 'posts_by_category' category=post.category %}">#{{ post.category }}</a>
                     </div>
                     <!-- Divider-->
                     <hr class="my-4" />
